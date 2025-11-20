@@ -1,0 +1,163 @@
+version: '3.8'
+
+services:
+
+  # ADMINISTRACIÓN (Usuarios, Roles, Permisos)
+
+  
+  #Base de Datos EXCLUSIVA para Administración
+  postgres_admin:
+    image: postgres:15-alpine
+    container_name: db_admin_server
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: db_administracion
+    ports:
+      # Usamos el 5432 externo para el módulo principal
+      - "5432:5432" 
+    volumes:
+      - pg_admin_data:/var/lib/postgresql/data
+
+  #  Microservicio de Administración
+  ms-administracion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_ms_admin
+    # Comando específico para iniciar SOLO este microservicio
+    command: npm run start:dev ms-administracion
+    ports:
+      - "3001:3001" # Puerto TCP expuesto para debug
+    environment:
+      # CONEXIÓN: Se conecta a 'postgres_admin'
+      DB_HOST: postgres_admin 
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      DB_DATABASE: db_administracion
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres_admin
+
+
+  # BLOQUE 2: INVENTARIO 
+
+
+  #Base de Datos EXCLUSIVA para Inventario
+  postgres_inventario:
+    image: postgres:15-alpine
+    container_name: db_inventario_server
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: db_inventario
+    ports:
+      
+      # Internamente sigue siendo 5432
+      - "5433:5432"
+    volumes:
+      - pg_inventario_data:/var/lib/postgresql/data
+
+  # Microservicio de Inventario
+  ms-inventario:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_ms_inventario
+    command: npm run start:dev ms-inventario
+    environment:
+      # CONEXIÓN: Se conecta a su propia BD 'postgres_inventario'
+      DB_HOST: postgres_inventario
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      DB_DATABASE: db_inventario
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres_inventario
+
+
+  # BLOQUE 3: VENTAS (Pedidos, Facturación)
+
+
+  # Base de Datos EXCLUSIVA para Ventas
+  postgres_ventas:
+    image: postgres:15-alpine
+    container_name: db_ventas_server
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: db_ventas
+    ports:
+      # IMPORTANTE: Puerto externo 5434
+      - "5434:5432"
+    volumes:
+      - pg_ventas_data:/var/lib/postgresql/data
+
+  #  Microservicio de Ventas
+  ms-ventas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_ms_ventas
+    command: npm run start:dev ms-ventas
+    environment:
+      DB_HOST: postgres_ventas
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: root
+      DB_DATABASE: db_ventas
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres_ventas
+
+
+  #API GATEWAY (El orquestador de los microservicios)
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gateway_principal
+    command: npm run start:dev api-gateway
+    ports:
+      - "3000:3000" # Puerto HTTP accesible desde internet
+    environment:
+      # Variables para encontrar a los microservicios por su nombre de contenedor
+      MS_ADMIN_HOST: ms-administracion
+      MS_INVENTARIO_HOST: ms-inventario
+      MS_VENTAS_HOST: ms-ventas
+      # Agrega aquí los demás hosts cuando crees los otros módulos
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - ms-administracion
+      - ms-inventario
+      - ms-ventas
+
+  # HERRAMIENTAS GLOBALES
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_panel
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+
+volumes:
+  pg_admin_data:
+  pg_inventario_data:
+  pg_ventas_data:

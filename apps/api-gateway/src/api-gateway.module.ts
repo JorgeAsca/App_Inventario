@@ -6,17 +6,27 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ClientsModule.register([
+    // Cargamos las variables de entorno globales
+    ConfigModule.forRoot({
+        isGlobal: true,
+    }),
+    
+    // Usamos registerAsync para poder inyectar la configuración
+    ClientsModule.registerAsync([
       {
-        name: 'INVENTORY_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'localhost',
-          port: 3001,
-        },
+        name: 'ADMIN_SERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.TCP,
+          options: {
+            // Aquí está la magia: Si existe la variable usa esa, si no, usa localhost
+            host: configService.get('MS_ADMIN_HOST') || 'localhost', 
+            port: 3001,
+          },
+        }),
       },
     ]),
-    
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],
