@@ -1,3 +1,5 @@
+globalThis.crypto = require('crypto');
+
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger } from '@nestjs/common';
