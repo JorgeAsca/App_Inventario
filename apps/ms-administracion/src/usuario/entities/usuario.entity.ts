@@ -1,5 +1,5 @@
-import { Empresa } from "./empresa.entity";
-import { Role } from "./role.entity";
+import { Empresa } from "../../empresa/entities/empresa.entity";
+import { Role } from "../../role/entities/role.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,

@@ -1,5 +1,5 @@
-import { Usuario } from "./usuario.entity";
-import { Permiso } from "./permiso.entity";
+import { Usuario } from '../../usuario/entities/usuario.entity';
+import { Permiso } from "../../permiso/entities/permiso.entity";
 import {
   Entity,
   PrimaryGeneratedColumn,

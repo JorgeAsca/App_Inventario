@@ -1,4 +1,4 @@
-globalThis.crypto = require('crypto');
+// globalThis.crypto = require('crypto');
 
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';

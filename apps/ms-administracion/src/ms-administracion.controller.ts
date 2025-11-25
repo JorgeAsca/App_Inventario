@@ -9,6 +9,6 @@ export class MsAdministracionController {
 
   @MessagePattern({ cmd: 'ping' })
   ping() {
-    return { mensaje: 'El mensaje paso la prueba Http y la TCP ahora recibes los datos ...' };
+    return { mensaje: 'El mensaje paso la prueba Http y devuelve los datos enviando mensajes TCP  ...' };
   }
 }

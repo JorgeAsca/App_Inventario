@@ -8,7 +8,7 @@
     "tsConfigPath": "apps/inventario-backend/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/api-gateway",
+  "root": "apps/inventario-backend",
   "projects": {
     "api-gateway": {
       "type": "application",
@@ -17,24 +17,6 @@
       "sourceRoot": "apps/api-gateway/src",
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
-      }
-    },
-    "common": {
-      "type": "library",
-      "root": "libs/common",
-      "entryFile": "index",
-      "sourceRoot": "libs/common/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
-      }
-    },
-    "inventario-backend": {
-      "type": "application",
-      "root": "apps/inventario-backend",
-      "entryFile": "main",
-      "sourceRoot": "apps/inventario-backend/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/inventario-backend/tsconfig.app.json"
       }
     },
     "ms-administracion": {
@@ -46,24 +28,6 @@
         "tsConfigPath": "apps/ms-administracion/tsconfig.app.json"
       }
     },
-    "ms-analytics": {
-      "type": "application",
-      "root": "apps/ms-analytics",
-      "entryFile": "main",
-      "sourceRoot": "apps/ms-analytics/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/ms-analytics/tsconfig.app.json"
-      }
-    },
-    "ms-configuracion": {
-      "type": "application",
-      "root": "apps/ms-configuracion",
-      "entryFile": "main",
-      "sourceRoot": "apps/ms-configuracion/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/ms-configuracion/tsconfig.app.json"
-      }
-    },
     "ms-inventario": {
       "type": "application",
       "root": "apps/ms-inventario",
@@ -73,24 +37,6 @@
         "tsConfigPath": "apps/ms-inventario/tsconfig.app.json"
       }
     },
-    "ms-logistica": {
-      "type": "application",
-      "root": "apps/ms-logistica",
-      "entryFile": "main",
-      "sourceRoot": "apps/ms-logistica/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/ms-logistica/tsconfig.app.json"
-      }
-    },
-    "ms-terceros": {
-      "type": "application",
-      "root": "apps/ms-terceros",
-      "entryFile": "main",
-      "sourceRoot": "apps/ms-terceros/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/ms-terceros/tsconfig.app.json"
-      }
-    },
     "ms-ventas": {
       "type": "application",
       "root": "apps/ms-ventas",
@@ -98,6 +44,15 @@
       "sourceRoot": "apps/ms-ventas/src",
       "compilerOptions": {
         "tsConfigPath": "apps/ms-ventas/tsconfig.app.json"
+      }
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     }
   }
